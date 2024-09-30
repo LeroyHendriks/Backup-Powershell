@@ -1,12 +1,11 @@
-# Definieer de bronmappen en hun doelbestemmingen
-$mapDoelverzameling = @{
-    "C:\Test-start" = "C:\Test-destination"
-    "C:\Test-start1" = "C:\Test-destination"
-}
+# Laad de JSON-configuratie in
+$configPad = "C:\path\naar\backupconfig.json"
+$config = Get-Content $configPad | ConvertFrom-Json
 
-# Looped door elke bronmap heen en kopieerd deze naar de doelmap
-foreach ($bronMap in $mapDoelverzameling.Keys) {
-    $doelMap = $mapDoelverzameling[$bronMap]
+# Looped door elke bronmap heen en kopieert deze naar de doelmap
+foreach ($backupPath in $config.backupPaths) {
+    $bronMap = $backupPath.source
+    $doelMap = $backupPath.destination
 
     # Controleer of de bronmap bestaat
     if (Test-Path $bronMap -PathType Container) {
