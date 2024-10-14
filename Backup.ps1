@@ -81,55 +81,6 @@ function PartialBackup {
     *              Partial Backup          *
     ---------------------------------------------
     "
-
-    # Pad naar het JSON-configuratiebestand
-    $BackupconfigPad = ".\config\fbconfig.json"
-
-    # Controleren of het configuratiebestand bestaat
-    if (-not (Test-Path $BackupconfigPad)) {
-        Write-Host "Configuratiebestand '$BackupconfigPad' niet gevonden. Maak eerst een volledige backup."
-        pause
-        return
-    }
-
-    # Configuratiegegevens laden
-    $configData = Get-Content -Raw -Path $BackupconfigPad | ConvertFrom-Json
-
-    # Voor elke backup-pad in het JSON-bestand
-    foreach ($path in $configData.backupPaths) {
-        $source = $path.source
-        $destination = $path.destination
-
-        Write-Host "Gedeeltelijke backup uitvoeren van $source naar $destination..."
-
-        # Controleren of de bronmap bestaat
-        if (Test-Path $source) {
-            # Haal de laatste backup-timestamp op voor dit pad
-            $lastBackupTime = $path.lastBackupTime
-
-            # Zoek bestanden die zijn gewijzigd sinds de laatste backup
-            $filesToBackup = Get-ChildItem -Path $source -Recurse | Where-Object { $_.LastWriteTime -gt $lastBackupTime }
-
-            # Kopieer de nieuwe bestanden naar de bestemmingsmap
-            foreach ($file in $filesToBackup) {
-                $destinationFile = Join-Path -Path $destination -ChildPath $file.FullName.Substring($source.Length + 1)
-                Write-Host "Kopieer $($file.FullName) naar $($destinationFile)"
-                Copy-Item -Path $file.FullName -Destination $destinationFile -Force
-            }
-
-            # Update de laatste backup-tijd in de configuratie
-            $path.lastBackupTime = Get-Date
-
-            Write-Host "Gedeeltelijke backup van $source naar $destination voltooid!"
-        } else {
-            Write-Host "Fout: Bronmap $source bestaat niet."
-        }
-    }
-
-    # Opslaan van bijgewerkte configuratie naar het bestand
-    $configData | ConvertTo-Json -Depth 5 | Set-Content -Path $FBconfigPad -Encoding utf8
-
-    Write-Host "Gedeeltelijke backup-proces voltooid."
 }
 
 # Main menu

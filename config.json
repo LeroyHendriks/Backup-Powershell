@@ -1,0 +1,13 @@
+{
+    "backupPaths": [
+      {
+        "source": "C:\\Test-start",
+        "destination": "C:\\Test-destination"
+      },
+      {
+        "source": "C:\\Test-start1",
+        "destination": "C:\\Test-destination"
+      }
+    ]
+  }
+  
