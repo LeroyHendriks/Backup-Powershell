@@ -1,6 +1,9 @@
 # Laad de JSON-configuratie in
-$configPad = "C:\path\naar\backupconfig.json"
+if ($configPad = ".\config.json") {
 $config = Get-Content $configPad | ConvertFrom-Json
+    } else {
+        Write-Warning "Pad niet gevonden"
+    }
 
 # Looped door elke bronmap heen en kopieert deze naar de doelmap
 foreach ($backupPath in $config.backupPaths) {
@@ -16,3 +19,8 @@ foreach ($backupPath in $config.backupPaths) {
         Write-Warning "Bronmap $bronMap niet gevonden!"
     }
 }
+
+param (
+    FullBackup
+    Partial
+)
